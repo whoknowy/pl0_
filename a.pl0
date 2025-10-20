@@ -1,0 +1,21 @@
+const n = 5;
+var i, sum, a(1:5);
+
+begin
+  i := 1;
+  while i <= n do
+  begin
+    read(a(i));
+    i := i + 1
+  end;
+
+  sum := 0;
+  i := 1;
+  while i <= n do
+  begin
+    sum := sum + a(i);
+    i := i + 1
+  end;
+
+  write(sum)
+end.
