@@ -12,7 +12,7 @@ typedef enum {
 } bool;
 
 
-#define norw 13     /* 关键字个数 */
+#define norw 15     /* 关键字个数 */
 #define txmax 100   /* 名字表容量 */
 #define nmax 14     /* number的最大位数 */
 #define al 10       /* 符号的最大长度 */
@@ -28,9 +28,9 @@ enum symbol {
     rparen,      comma,     semicolon,  period,    becomes,
     beginsym,    endsym,    ifsym,      thensym,   whilesym,
     writesym,    readsym,   dosym,      callsym,   constsym,
-    varsym,      procsym,
+    varsym,      procsym,   forsym,     tosym,    
 };
-#define symnum 32
+#define symnum 34
 
 /* 名字表中的类型 */
 enum object {
@@ -67,7 +67,7 @@ enum symbol sym;    /* 当前的符号 */
 char id[al+1];      /* 当前ident, 多出的一个字节用于存放0 */
 int num;            /* 当前number */
 int cc, ll;          /* getch使用的计数器，cc表示当前字符(ch)的位置 */
-int cx;             /* 虚拟机代码指针, 取值范围[0, cxmax-1]*/
+int cx;           /* 虚拟机代码指针, 取值范围[0, cxmax-1]*/
 char line[81];      /* 读取行缓冲区 */
 char a[al+1];       /* 临时符号, 多出的一个字节用于存放0 */
 struct instruction code[cxmax]; /* 存放虚拟机代码的数组 */
