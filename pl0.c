@@ -18,11 +18,8 @@
 #include "pl0.h"
 #include "string.h"
 
-/* 解释执行时使用的栈 */
+ /* 解释执行时使用的栈 */
 #define stacksize 500
-int for_depth = 0;
-#define FOR_TEMP_SLOTS 8
-#define FOR_TEMP_BASE 3
 
 int main()
 {
@@ -67,6 +64,7 @@ int main()
 				fclose(fas);
 				fclose(fin);
 				printf("\n");
+				getchar();
 				return 0;
 			}
 			fclose(fa);
@@ -108,7 +106,7 @@ int main()
 void init()
 {
 	int i;
-
+	count=0;
 	/* 设置单字符符号 */
 	for (i = 0; i <= 255; i++)
 	{
@@ -201,12 +199,12 @@ void init()
 /*
  * 用数组实现集合的集合运算
  */
-int inset(int e, bool *s)
+int inset(int e, bool* s)
 {
 	return s[e];
 }
 
-int addset(bool *sr, bool *s1, bool *s2, int n)
+int addset(bool* sr, bool* s1, bool* s2, int n)
 {
 	int i;
 	for (i = 0; i < n; i++)
@@ -216,7 +214,7 @@ int addset(bool *sr, bool *s1, bool *s2, int n)
 	return 0;
 }
 
-int subset(bool *sr, bool *s1, bool *s2, int n)
+int subset(bool* sr, bool* s1, bool* s2, int n)
 {
 	int i;
 	for (i = 0; i < n; i++)
@@ -226,7 +224,7 @@ int subset(bool *sr, bool *s1, bool *s2, int n)
 	return 0;
 }
 
-int mulset(bool *sr, bool *s1, bool *s2, int n)
+int mulset(bool* sr, bool* s1, bool* s2, int n)
 {
 	int i;
 	for (i = 0; i < n; i++)
@@ -460,7 +458,7 @@ int gen(enum fct x, int y, int z)
  * s2:   如果不是我们需要的，则需要一个补救用的集合
  * n:    错误号
  */
-int test(bool *s1, bool *s2, int n)
+int test(bool* s1, bool* s2, int n)
 {
 	if (!inset(sym, s1))
 	{
@@ -481,7 +479,7 @@ int test(bool *s1, bool *s2, int n)
  * tx:     名字表当前尾指针
  * fsys:   当前模块后跟符号集合
  */
-int block(int lev, int tx, bool *fsys)
+int block(int lev, int tx, bool* fsys)
 {
 	int i;
 
@@ -492,7 +490,7 @@ int block(int lev, int tx, bool *fsys)
 						 传递进来的是指针，为防止下级函数改变上级函数的集合，开辟新的空?
 						 传递给下级函数*/
 
-	dx = 3 + FOR_TEMP_SLOTS;
+	dx = 3;
 	tx0 = tx; /* 记录本层名字的初始位置 */
 	table[tx].adr = cx;
 
@@ -660,7 +658,7 @@ int block(int lev, int tx, bool *fsys)
  * lev:    名字所在的层次,，以后所有的lev都是这样
  * pdx:    dx为当前应分配的变量的相对地址，分配后要增加1
  */
-void enter(enum object k, int *ptx, int lev, int *pdx)
+void enter(enum object k, int* ptx, int lev, int* pdx)
 {
 	(*ptx)++;
 	strcpy(table[(*ptx)].name, id); /* 全局变量id中已存有当前名字的名字 */
@@ -693,7 +691,7 @@ void enter(enum object k, int *ptx, int lev, int *pdx)
  * idt:    要查找的名字
  * tx:     当前名字表尾指针
  */
-int position(char *idt, int tx)
+int position(char* idt, int tx)
 {
 	int i;
 	strcpy(table[0].name, idt);
@@ -708,7 +706,7 @@ int position(char *idt, int tx)
 /*
  * 常量声明处理
  */
-int constdeclaration(int *ptx, int lev, int *pdx)
+int constdeclaration(int* ptx, int lev, int* pdx)
 {
 	if (sym == ident)
 	{
@@ -745,7 +743,7 @@ int constdeclaration(int *ptx, int lev, int *pdx)
 /*
  * 变量声明处理
  */
-int vardeclaration(int *ptx, int lev, int *pdx)
+int vardeclaration(int* ptx, int lev, int* pdx)
 {
 	if (sym == ident)
 	{
@@ -778,7 +776,7 @@ void listcode(int cx0)
 /*
  * 语句处理
  */
-int statement(bool *fsys, int *ptx, int lev)
+int statement(bool* fsys, int* ptx, int lev)
 {
 	int i, cx1, cx2;
 	bool nxtlev[symnum];
@@ -933,7 +931,7 @@ int statement(bool *fsys, int *ptx, int lev)
 					if (sym == ifsym) /* 准备按照if语句处理 */
 					{
 						getsymdo;
-						memcpy(nxtlev, fsys, sizeof(bool) * symnum);
+						memcpy(nxtlev, fsys, sizeof(bool)* symnum);
 						nxtlev[thensym] = true;
 						nxtlev[dosym] = true;		   /* 后跟符号为then或do */
 						conditiondo(nxtlev, ptx, lev); /* 调用条件处理（逻辑运算）函数 */
@@ -955,7 +953,7 @@ int statement(bool *fsys, int *ptx, int lev)
 						if (sym == beginsym) /* 准备按照复合语句处理 */
 						{
 							getsymdo;
-							memcpy(nxtlev, fsys, sizeof(bool) * symnum);
+							memcpy(nxtlev, fsys, sizeof(bool)* symnum);
 							nxtlev[semicolon] = true;
 							nxtlev[endsym] = true; /* 后跟符号为分号或end */
 							/* 循环调用语句处理函数，直到下一个符号不是语句开始符号或收到end */
@@ -988,7 +986,7 @@ int statement(bool *fsys, int *ptx, int lev)
 							{
 								cx1 = cx; /* 保存判断条件操作的位置 */
 								getsymdo;
-								memcpy(nxtlev, fsys, sizeof(bool) * symnum);
+								memcpy(nxtlev, fsys, sizeof(bool)* symnum);
 								nxtlev[dosym] = true;		   /* 后跟符号为do */
 								conditiondo(nxtlev, ptx, lev); /* 调用条件处理 */
 								cx2 = cx;					   /* 保存循环体的结束的下一个位置 */
@@ -1011,7 +1009,6 @@ int statement(bool *fsys, int *ptx, int lev)
 									{
 										int i;              // 循环变量位置
 										int cx1, cx2;
-										static int count = 0;// 循环开始与跳出位置
 										bool nxtlev[symnum];
 
 										getsymdo;  // 跳过 for
@@ -1022,13 +1019,11 @@ int statement(bool *fsys, int *ptx, int lev)
 											error(37); // for后应为标识符
 											return 0;
 										}
-
 										i = position(id, *ptx);
 										if (i == 0)
 											error(11); // 未声明标识符
 										else if (table[i].kind != variable)
 											error(38); // for变量必须是变量
-
 										getsymdo;
 										if (sym != becomes)
 											error(13); // 缺少 :=
@@ -1100,7 +1095,7 @@ int statement(bool *fsys, int *ptx, int lev)
 /*
  * 表达式处理
  */
-int expression(bool *fsys, int *ptx, int lev)
+int expression(bool* fsys, int* ptx, int lev)
 {
 	enum symbol addop; /* 用于保存正负号 */
 	bool nxtlev[symnum];
@@ -1148,7 +1143,7 @@ int expression(bool *fsys, int *ptx, int lev)
 /*
  * 项处理
  */
-int term(bool *fsys, int *ptx, int lev)
+int term(bool* fsys, int* ptx, int lev)
 {
 	enum symbol mulop; /* 用于保存乘除法符号 */
 	bool nxtlev[symnum];
@@ -1177,7 +1172,7 @@ int term(bool *fsys, int *ptx, int lev)
 /*
  * 因子处理
  */
-int factor(bool *fsys, int *ptx, int lev)
+int factor(bool* fsys, int* ptx, int lev)
 {
 	int i;
 	bool nxtlev[symnum];
@@ -1248,7 +1243,7 @@ int factor(bool *fsys, int *ptx, int lev)
 /*
  * 条件处理
  */
-int condition(bool *fsys, int *ptx, int lev)
+int condition(bool* fsys, int* ptx, int lev)
 {
 	enum symbol relop;
 	bool nxtlev[symnum];
@@ -1434,7 +1429,7 @@ void interpret()
 }
 
 /* 通过过程基址求上l层过程的基址 */
-int base(int l, int *s, int b)
+int base(int l, int* s, int b)
 {
 	int b1;
 	b1 = b;
