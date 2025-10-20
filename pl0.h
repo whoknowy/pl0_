@@ -19,7 +19,7 @@ typedef enum {
 #define amax 2047   /* 地址上界*/
 #define levmax 3    /* 最大允许过程嵌套声明层数 [0,  levmax]*/
 #define cxmax 500   /* 最多的虚拟机代码数 */
-
+#define countmax 3
 /* 符号 */
 enum symbol {
     nul,         ident,     number,     plus,      minus,
@@ -96,6 +96,7 @@ FILE* fin;
 FILE* fout;
 char fname[al];
 int err; /* 错误计数器 */
+int count;
 
 /* 当函数中会发生fatal error时，返回-1告知调用它的函数，最终退出程序 */
 #define getsymdo                      if(-1 == getsym()) return -1
