@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include "pl0.h"
 #include "string.h"
+#include <windows.h>
 
  /* 解释执行时使用的栈 */
 #define stacksize 500
@@ -24,7 +25,7 @@
 int main()
 {
 	bool nxtlev[symnum];
-
+	SetConsoleOutputCP(65001); 
 	printf("Input pl/0 file?   ");
 	scanf("%s", fname); /* 输入文件名 */
 
@@ -106,7 +107,7 @@ int main()
 void init()
 {
 	int i;
-	count=0;
+	count = 0;
 	/* 设置单字符符号 */
 	for (i = 0; i <= 255; i++)
 	{
@@ -238,148 +239,148 @@ int mulset(bool* sr, bool* s1, bool* s2, int n)
  *   出错处理，打印出错位置和错误编码
  */
 void error(int n) {
-    char space[81];
-    memset(space, 32, 81);
+	char space[81];
+	memset(space, 32, 81);
 
-    space[cc - 1] = 0;  //出错时当前符号已经读完，所以cc-1回退一个字符
-    printf("****%s[!]%d\n", space, n);
-    fprintf(fa1, "****%s[!]%d\n", space, n);
-    switch (n) {
-        case 1:
-            printf("Error:常数说明中的“=”写成“：=”。\n");
-            fprintf(fa1, "Error:常数说明中的“=”写成“:=”。\n");
-            break;
-        case 2:
-            printf("Error:常数说明中的“=”后应是数字。\n");
-            fprintf(fa1, "Error:常数说明中的“=”后应是数字。\n");
-            break;
-        case 3:
-            printf("Error:常数说明中的标识符后应是“=”。\n");
-            fprintf(fa1, "Error:常数说明中的标识符后应是“=”。\n");
-            break;
-        case 4:
-            printf("Error:const,var,procedure后应为标识符。\n");
-            fprintf(fa1, "Error:const,var,procedure后应为标识符。\n");
-            break;
-        case 5:
-            printf("Error:漏掉了“,”或“;”。\n");
-            fprintf(fa1, "Error:漏掉了“,”或“;”。\n");
-            break;
-        case 6:
-            printf("Error:过程说明后的符号不正确(应是语句开始符,或过程定义符)\n");
-            fprintf(fa1, "过程说明后的符号不正确(应是语句开始符,或过程定义符)\n");
-            break;
-        case 7:
-            // system("pause");
-            printf("Error:应是语句开始符。\n");
-            fprintf(fa1, "Error:应是语句开始符。\n");
-            break;
-        case 8:
-            printf("Error:程序体内语句部分的后跟符不正确。\n");
-            fprintf(fa1, "Error:程序体内语句部分的后跟符不正确。\n");
-            break;
-        case 9:
-            printf("Error:程序结尾丢了句号“.”\n");
-            fprintf(fa1, "Error:程序结尾丢了句号“.”\n");
-            break;
-        case 10:
-            printf("Error:语句之间漏了“;”。\n");
-            fprintf(fa1, "Error:语句之间漏了“;”。\n");
-            break;
-        case 11:
-            printf("Error:标识符未说明。\n");
-            fprintf(fa1, "Error:标识符未说明。\n");
-            break;
-        case 12:
-            printf("Error:赋值语句中，赋值号左部标识符属性应是变量。\n");
-            fprintf(fa1, "Error:赋值语句中，赋值号左部标识符属性应是变量。\n");
-            break;
-        case 13:
-            printf("Error:赋值语句左部标识符后应是赋值号“:=”。\n");
-            fprintf(fa1, "Error:赋值语句左部标识符后应是赋值号“:=”。\n");
-            break;
-        case 14:
-            printf("Error:call后应为标识符。\n");
-            fprintf(fa1, "Error:call后应为标识符。\n");
-            break;
-        case 15:
-            printf("Error:call后标识符属性应为过程。\n");
-            fprintf(fa1, "Error:call后标识符属性应为过程。\n");
-            break;
-        case 16:
-            printf("Error:条件语句中丢了“then”。\n");
-            fprintf(fa1, "Error:条件语句中丢了“then”。\n");
-            break;
-        case 17:
-            printf("Error:丢了“end”或“;”。\n");
-            fprintf(fa1, "Error:丢了“end”或“;”。\n");
-            break;
-        case 18:
-            printf("Error:while型循环语句中丢了“do”。\n");
-            fprintf(fa1, "Error:while型循环语句中丢了“do”。\n");
-            break;
-        case 19:
-            printf("Error:语句后的符号不正确。\n");
-            fprintf(fa1, "Error:语句后的符号不正确。\n");
-            break;
-        case 20:
-            printf("Error:应为关系运算符。\n");
-            fprintf(fa1, "Error:应为关系运算符。\n");
-            break;
-        case 21:
-            printf("Error:表达式内标识符属性不能是过程。\n");
-            fprintf(fa1, "Error:表达式内标识符属性不能是过程。\n");
-            break;
-        case 22:
-            printf("Error:表达式中漏掉右括号“)”。\n");
-            fprintf(fa1, "Error:表达式中漏掉右括号“)”。\n");
-            break;
-        case 23:
-            printf("Error:因子后的非法符号。\n");
-            fprintf(fa1, "Error:因子后的非法符号。\n");
-            break;
-        case 24:
-            printf("Error:表达式的开始符不能是此符号。\n");
-            fprintf(fa1, "Error:表达式的开始符不能是此符号。\n");
-            break;
-        case 30:
-            printf("Error:常数越界。\n");
-            fprintf(fa1, "Error:常数越界。\n");
-            break;
-        case 31:
-            printf("Error:表达式内常数越界。\n");
-            fprintf(fa1, "Error:表达式内常数越界。\n");
-            break;
-        case 32:
-            printf("Error:嵌套深度超过允许值。\n");
-            fprintf(fa1, "Error:嵌套深度超过允许值。\n");
-            break;
-        case 33:
-            printf("Error:read或write或for语句中缺“)”。\n");
-            fprintf(fa1, "Error:read或write或for语句中缺“)”。\n");
-            break;
-        case 34:
-            printf("Error:read或write或for语句中缺“(”。\n");
-            fprintf(fa1, "Error:read或write或for语句中缺“(”。\n");
-            break;
-        case 35:
-            printf("Error:read语句括号中的标识符不是变量。\n");
-            fprintf(fa1, "Error:read语句括号中的标识符不是变量。\n");
-            break;
-        case 36:
-            printf("Error:变量字符过长。\n");
-            fprintf(fa1, "Error:变量字符过长。\n");
-            break;
-        case 37:
-            printf("Error:注释缺少“}”。\n");
-            fprintf(fa1, "Error:注释缺少“}”。\n");
-            break;
-        case 38:
-            printf("Error:数组下标越界。\n");
-            fprintf(fa1, "Error:数组下标越界。\n");
-            break;
-    }
-    err++;
+	space[cc - 1] = 0;  //出错时当前符号已经读完，所以cc-1回退一个字符
+	printf("****%s[!]%d\n", space, n);
+	fprintf(fa1, "****%s[!]%d\n", space, n);
+	switch (n) {
+	case 1:
+		printf("Error:常数说明中的“=”写成“：=”。\n");
+		fprintf(fa1, "Error:常数说明中的“=”写成“:=”。\n");
+		break;
+	case 2:
+		printf("Error:常数说明中的“=”后应是数字。\n");
+		fprintf(fa1, "Error:常数说明中的“=”后应是数字。\n");
+		break;
+	case 3:
+		printf("Error:常数说明中的标识符后应是“=”。\n");
+		fprintf(fa1, "Error:常数说明中的标识符后应是“=”。\n");
+		break;
+	case 4:
+		printf("Error:const,var,procedure后应为标识符。\n");
+		fprintf(fa1, "Error:const,var,procedure后应为标识符。\n");
+		break;
+	case 5:
+		printf("Error:漏掉了“,”或“;”。\n");
+		fprintf(fa1, "Error:漏掉了“,”或“;”。\n");
+		break;
+	case 6:
+		printf("Error:过程说明后的符号不正确(应是语句开始符,或过程定义符)\n");
+		fprintf(fa1, "过程说明后的符号不正确(应是语句开始符,或过程定义符)\n");
+		break;
+	case 7:
+		// system("pause");
+		printf("Error:应是语句开始符。\n");
+		fprintf(fa1, "Error:应是语句开始符。\n");
+		break;
+	case 8:
+		printf("Error:程序体内语句部分的后跟符不正确。\n");
+		fprintf(fa1, "Error:程序体内语句部分的后跟符不正确。\n");
+		break;
+	case 9:
+		printf("Error:程序结尾丢了句号“.”\n");
+		fprintf(fa1, "Error:程序结尾丢了句号“.”\n");
+		break;
+	case 10:
+		printf("Error:语句之间漏了“;”。\n");
+		fprintf(fa1, "Error:语句之间漏了“;”。\n");
+		break;
+	case 11:
+		printf("Error:标识符未说明。\n");
+		fprintf(fa1, "Error:标识符未说明。\n");
+		break;
+	case 12:
+		printf("Error:赋值语句中，赋值号左部标识符属性应是变量。\n");
+		fprintf(fa1, "Error:赋值语句中，赋值号左部标识符属性应是变量。\n");
+		break;
+	case 13:
+		printf("Error:赋值语句左部标识符后应是赋值号“:=”。\n");
+		fprintf(fa1, "Error:赋值语句左部标识符后应是赋值号“:=”。\n");
+		break;
+	case 14:
+		printf("Error:call后应为标识符。\n");
+		fprintf(fa1, "Error:call后应为标识符。\n");
+		break;
+	case 15:
+		printf("Error:call后标识符属性应为过程。\n");
+		fprintf(fa1, "Error:call后标识符属性应为过程。\n");
+		break;
+	case 16:
+		printf("Error:条件语句中丢了“then”。\n");
+		fprintf(fa1, "Error:条件语句中丢了“then”。\n");
+		break;
+	case 17:
+		printf("Error:丢了“end”或“;”。\n");
+		fprintf(fa1, "Error:丢了“end”或“;”。\n");
+		break;
+	case 18:
+		printf("Error:while型循环语句中丢了“do”。\n");
+		fprintf(fa1, "Error:while型循环语句中丢了“do”。\n");
+		break;
+	case 19:
+		printf("Error:语句后的符号不正确。\n");
+		fprintf(fa1, "Error:语句后的符号不正确。\n");
+		break;
+	case 20:
+		printf("Error:应为关系运算符。\n");
+		fprintf(fa1, "Error:应为关系运算符。\n");
+		break;
+	case 21:
+		printf("Error:表达式内标识符属性不能是过程。\n");
+		fprintf(fa1, "Error:表达式内标识符属性不能是过程。\n");
+		break;
+	case 22:
+		printf("Error:表达式中漏掉右括号“)”。\n");
+		fprintf(fa1, "Error:表达式中漏掉右括号“)”。\n");
+		break;
+	case 23:
+		printf("Error:因子后的非法符号。\n");
+		fprintf(fa1, "Error:因子后的非法符号。\n");
+		break;
+	case 24:
+		printf("Error:表达式的开始符不能是此符号。\n");
+		fprintf(fa1, "Error:表达式的开始符不能是此符号。\n");
+		break;
+	case 30:
+		printf("Error:常数越界。\n");
+		fprintf(fa1, "Error:常数越界。\n");
+		break;
+	case 31:
+		printf("Error:表达式内常数越界。\n");
+		fprintf(fa1, "Error:表达式内常数越界。\n");
+		break;
+	case 32:
+		printf("Error:嵌套深度超过允许值。\n");
+		fprintf(fa1, "Error:嵌套深度超过允许值。\n");
+		break;
+	case 33:
+		printf("Error:read或write或for语句中缺“)”。\n");
+		fprintf(fa1, "Error:read或write或for语句中缺“)”。\n");
+		break;
+	case 34:
+		printf("Error:read或write或for语句中缺“(”。\n");
+		fprintf(fa1, "Error:read或write或for语句中缺“(”。\n");
+		break;
+	case 35:
+		printf("Error:read语句括号中的标识符不是变量。\n");
+		fprintf(fa1, "Error:read语句括号中的标识符不是变量。\n");
+		break;
+	case 36:
+		printf("Error:变量字符过长。\n");
+		fprintf(fa1, "Error:变量字符过长。\n");
+		break;
+	case 37:
+		printf("Error:注释缺少“}”。\n");
+		fprintf(fa1, "Error:注释缺少“}”。\n");
+		break;
+	case 38:
+		printf("Error:数组下标越界。\n");
+		fprintf(fa1, "Error:数组下标越界。\n");
+		break;
+	}
+	err++;
 }
 
 /*
@@ -1063,7 +1064,7 @@ int statement(bool* fsys, int* ptx, int lev)
 					if (sym == ifsym) /* 准备按照if语句处理 */
 					{
 						getsymdo;
-						memcpy(nxtlev, fsys, sizeof(bool)* symnum);
+						memcpy(nxtlev, fsys, sizeof(bool) * symnum);
 						nxtlev[thensym] = true;
 						nxtlev[dosym] = true;		   /* 后跟符号为then或do */
 						conditiondo(nxtlev, ptx, lev); /* 调用条件处理（逻辑运算）函数 */
@@ -1085,7 +1086,7 @@ int statement(bool* fsys, int* ptx, int lev)
 						if (sym == beginsym) /* 准备按照复合语句处理 */
 						{
 							getsymdo;
-							memcpy(nxtlev, fsys, sizeof(bool)* symnum);
+							memcpy(nxtlev, fsys, sizeof(bool) * symnum);
 							nxtlev[semicolon] = true;
 							nxtlev[endsym] = true; /* 后跟符号为分号或end */
 							/* 循环调用语句处理函数，直到下一个符号不是语句开始符号或收到end */
@@ -1118,7 +1119,7 @@ int statement(bool* fsys, int* ptx, int lev)
 							{
 								cx1 = cx; /* 保存判断条件操作的位置 */
 								getsymdo;
-								memcpy(nxtlev, fsys, sizeof(bool)* symnum);
+								memcpy(nxtlev, fsys, sizeof(bool) * symnum);
 								nxtlev[dosym] = true;		   /* 后跟符号为do */
 								conditiondo(nxtlev, ptx, lev); /* 调用条件处理 */
 								cx2 = cx;					   /* 保存循环体的结束的下一个位置 */
@@ -1137,77 +1138,78 @@ int statement(bool* fsys, int* ptx, int lev)
 							}
 							else
 							{
-									if (sym == forsym)
+								if (sym == forsym)
+								{
+									int i;              // 循环变量位置
+									int cx1, cx2;
+									bool nxtlev[symnum];
+
+									getsymdo;  // 跳过 for
+
+									// 检查循环变量
+									if (sym != ident)
 									{
-										int i;              // 循环变量位置
-										int cx1, cx2;
-										bool nxtlev[symnum];
-
-										getsymdo;  // 跳过 for
-
-										// 检查循环变量
-										if (sym != ident)
-										{
-											error(37); // for后应为标识符
-											return 0;
-										}
-										i = position(id, *ptx);
-										if (i == 0)
-											error(11); // 未声明标识符
-										else if (table[i].kind != variable)
-											error(38); // for变量必须是变量
-										getsymdo;
-										if (sym != becomes)
-											error(13); // 缺少 :=
-
-										getsymdo;
-
-										// 计算初值
-										memcpy(nxtlev, fsys, sizeof(bool) * symnum);
-										nxtlev[tosym] = true;
-										expressiondo(nxtlev, ptx, lev);      // 求初值
-										gendo(sto, lev - table[i].level, table[i].adr);  // i := 初值
-
-										// 检查 to
-										if (sym != tosym)
-											error(39); // 缺少 to
-
-										getsymdo;
-										expressiondo(fsys, ptx, lev);  // 求终值
-										gendo(sto, 0, count);              // 临时保存终值到 adr=0
-
-										// 循环条件判断入口
-										cx1 = cx;
-										gendo(lod, lev - table[i].level, table[i].adr); // i
-										gendo(lod, 0, count++);                               // 终值
-										gendo(opr, 0, 13);                              // <= 比较
-										cx2 = cx;
-										gendo(jpc, 0, 0);                               // 条件假时跳出
-
-										// 检查 do
-										if (sym == dosym)
-										{
-											getsymdo;
-										}
-										else
-										{error(18); // 缺少 do
-										}
-
-										// 循环体
-										statementdo(fsys, ptx, lev);
-
-										// i := i + 1
-										gendo(lod, lev - table[i].level, table[i].adr);
-										gendo(lit, 0, 1);
-										gendo(opr, 0, 2);   // 加法
-										gendo(sto, lev - table[i].level, table[i].adr);
-
-										// 回跳到条件判断
-										gendo(jmp, 0, cx1);
-
-										// 填写跳出地址
-										code[cx2].a = cx;
+										error(37); // for后应为标识符
+										return 0;
 									}
+									i = position(id, *ptx);
+									if (i == 0)
+										error(11); // 未声明标识符
+									else if (table[i].kind != variable)
+										error(38); // for变量必须是变量
+									getsymdo;
+									if (sym != becomes)
+										error(13); // 缺少 :=
+
+									getsymdo;
+
+									// 计算初值
+									memcpy(nxtlev, fsys, sizeof(bool) * symnum);
+									nxtlev[tosym] = true;
+									expressiondo(nxtlev, ptx, lev);      // 求初值
+									gendo(sto, lev - table[i].level, table[i].adr);  // i := 初值
+
+									// 检查 to
+									if (sym != tosym)
+										error(39); // 缺少 to
+
+									getsymdo;
+									expressiondo(fsys, ptx, lev);  // 求终值
+									gendo(sto, 0, count);              // 临时保存终值到 adr=0
+
+									// 循环条件判断入口
+									cx1 = cx;
+									gendo(lod, lev - table[i].level, table[i].adr); // i
+									gendo(lod, 0, count++);                               // 终值
+									gendo(opr, 0, 13);                              // <= 比较
+									cx2 = cx;
+									gendo(jpc, 0, 0);                               // 条件假时跳出
+
+									// 检查 do
+									if (sym == dosym)
+									{
+										getsymdo;
+									}
+									else
+									{
+										error(18); // 缺少 do
+									}
+
+									// 循环体
+									statementdo(fsys, ptx, lev);
+
+									// i := i + 1
+									gendo(lod, lev - table[i].level, table[i].adr);
+									gendo(lit, 0, 1);
+									gendo(opr, 0, 2);   // 加法
+									gendo(sto, lev - table[i].level, table[i].adr);
+
+									// 回跳到条件判断
+									gendo(jmp, 0, cx1);
+
+									// 填写跳出地址
+									code[cx2].a = cx;
+								}
 
 								else
 								{

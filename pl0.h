@@ -11,6 +11,7 @@ typedef enum {
     true
 } bool;
 
+typedef struct _iobuf FILE;
 
 #define norw 15     /* 关键字个数 */
 #define txmax 100   /* 名字表容量 */
@@ -22,13 +23,13 @@ typedef enum {
 #define countmax 3
 /* 符号 */
 enum symbol {
-    nul,         ident,     number,     plus,      minus,
-    times,       slash,     oddsym,     eql,       neq,
-    lss,         leq,       gtr,        geq,       lparen,
-    rparen,      comma,     semicolon,  period,    becomes,
-    beginsym,    endsym,    ifsym,      thensym,   whilesym,
-    writesym,    readsym,   dosym,      callsym,   constsym,
-    varsym,      procsym,   forsym,     tosym,    
+    nul, ident, number, plus, minus,
+    times, slash, oddsym, eql, neq,
+    lss, leq, gtr, geq, lparen,
+    rparen, comma, semicolon, period, becomes,
+    beginsym, endsym, ifsym, thensym, whilesym,
+    writesym, readsym, dosym, callsym, constsym,
+    varsym, procsym, forsym, tosym,
 };
 #define symnum 34
 
@@ -42,9 +43,9 @@ enum object {
 
 /* 虚拟机代码 */
 enum fct {
-    lit,     opr,     lod,
-    sto,     cal,     inte,
-    jmp,     jpc,
+    lit, opr, lod,
+    sto, cal, inte,
+    jmp, jpc,
 };
 #define fctnum 8
 
@@ -64,12 +65,12 @@ bool listswitch;    /* 显示虚拟机代码与否 */
 bool tableswitch;   /* 显示名字表与否 */
 char ch;            /* 获取字符的缓冲区，getch 使用 */
 enum symbol sym;    /* 当前的符号 */
-char id[al+1];      /* 当前ident, 多出的一个字节用于存放0 */
+char id[al + 1];      /* 当前ident, 多出的一个字节用于存放0 */
 int num;            /* 当前number */
 int cc, ll;          /* getch使用的计数器，cc表示当前字符(ch)的位置 */
 int cx;           /* 虚拟机代码指针, 取值范围[0, cxmax-1]*/
 char line[81];      /* 读取行缓冲区 */
-char a[al+1];       /* 临时符号, 多出的一个字节用于存放0 */
+char a[al + 1];       /* 临时符号, 多出的一个字节用于存放0 */
 struct instruction code[cxmax]; /* 存放虚拟机代码的数组 */
 char word[norw][al];        /* 保留字 */
 enum symbol wsym[norw];     /* 保留字对应的符号值 */
