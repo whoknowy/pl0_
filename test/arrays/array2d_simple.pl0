@@ -1,0 +1,34 @@
+// 简单的二维数组测试
+var i, j, matrix(1:2, 1:2);
+
+begin
+    // 初始化2x2矩阵
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            matrix(i, j) := i + j;
+            j := j + 1
+        end
+        while j <= 2;
+        i := i + 1
+    end
+    while i <= 2;
+    
+    // 输出矩阵元素
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            write(matrix(i, j));
+            j := j + 1
+        end
+        while j <= 2;
+        i := i + 1
+    end
+    while i <= 2
+end.

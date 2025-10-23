@@ -1,0 +1,56 @@
+// 二维数组测试程序
+const rows = 3;
+const cols = 4;
+var i, j, sum, matrix(1:3, 1:4);
+
+begin
+    // 初始化二维数组
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            matrix(i, j) := i * 10 + j;
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 输出二维数组
+    write("Matrix:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            write(matrix(i, j));
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 计算二维数组元素之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            sum := sum + matrix(i, j);
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    write("Sum of all elements:");
+    write(sum)
+end.

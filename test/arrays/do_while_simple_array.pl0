@@ -1,0 +1,27 @@
+// 简单的do-while循环与数组测试
+const size = 5;
+var i, sum, numbers(1:5);
+
+begin
+    // 使用do-while循环初始化数组
+    i := 1;
+    do
+    begin
+        numbers(i) := i * i;  // 存储平方数
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 使用do-while循环计算数组元素之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        sum := sum + numbers(i);
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 输出结果
+    write(sum)
+end.

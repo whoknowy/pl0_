@@ -6,13 +6,11 @@
  *
  */
 
-typedef enum {
-    false,
-    true
-} bool;
+#define false_val 0
+#define true_val 1
 
 
-#define norw 16     /* 关键字个数 */
+#define norw 18     /* 关键字个数 */
 #define txmax 100   /* 名字表容量 */
 #define nmax 14     /* number的最大位数 */
 #define al 10       /* 符号的最大长度 */
@@ -30,16 +28,18 @@ enum symbol {
     writesym,    readsym,   dosym,      callsym,   constsym,
     varsym,      procsym,   forsym,     tosym,     colon,
     mod,         power,     andop,      orop,      notop,
-    elsesym
+    elsesym,     typedefsym
 };
-#define symnum 41  
+#define symnum 42  
 
 /* 名字表中的类型 */
 enum object {
     constant,
     variable,
     procedur,
-    array       //add
+    array,      // 1维数组
+    array2d,    // 2维数组
+    typedef_obj // typedef定义的类型别名
 };
 
 /* 虚拟机代码 */
@@ -47,9 +47,9 @@ enum fct {
     lit,     opr,     lod,
     sto,     cal,     inte,
     jmp,     jpc,     sto2,
-    lod2,
+    lod2,    lod2d,  sto2d,
 };
-#define fctnum 10
+#define fctnum 12
 
 /* 虚拟机代码结构 */
 struct instruction
@@ -63,8 +63,8 @@ FILE* fas;  /* 输出名字表 */
 FILE* fa;   /* 输出虚拟机代码 */
 FILE* fa1;  /* 输出源文件及其各行对应的首地址 */
 FILE* fa2;  /* 输出结果 */
-bool listswitch;    /* 显示虚拟机代码与否 */
-bool tableswitch;   /* 显示名字表与否 */
+int listswitch;    /* 显示虚拟机代码与否 */
+int tableswitch;   /* 显示名字表与否 */
 char ch;            /* 获取字符的缓冲区，getch 使用 */
 enum symbol sym;    /* 当前的符号 */
 char id[al+1];      /* 当前ident, 多出的一个字节用于存放0 */
@@ -77,21 +77,27 @@ struct instruction code[cxmax]; /* 存放虚拟机代码的数组 */
 char word[norw][al];        /* 保留字 */
 enum symbol wsym[norw];     /* 保留字对应的符号值 */
 enum symbol ssym[256];      /* 单字符的符号值 */
-char mnemonic[fctnum][5];   /* 虚拟机代码指令名称 */
-bool declbegsys[symnum];    /* 表示声明开始的符号集合 */
-bool statbegsys[symnum];    /* 表示语句开始的符号集合 */
-bool facbegsys[symnum];     /* 表示因子开始的符号集合 */
+char mnemonic[fctnum][6];   /* 虚拟机代码指令名称 */
+int declbegsys[symnum];    /* 表示声明开始的符号集合 */
+int statbegsys[symnum];    /* 表示语句开始的符号集合 */
+int facbegsys[symnum];     /* 表示因子开始的符号集合 */
 
 /* 名字表结构 */
 struct tablestruct
 {
     char name[al];      /* 名字 */
-    enum object kind;   /* 类型：const, var, array or procedure */
+    enum object kind;   /* 类型：const, var, array, array2d, procedure or typedef */
     int val;            /* 数值，仅const使用 */
     int level;          /* 所处层，仅const不使用 */
     int adr;            /* 地址，仅const不使用 */
     int size;           /* 需要分配的数据区空间, 仅procedure使用 */
     int low;            /* 数组下界，仅array使用 */
+    int high;           /* 数组上界，仅array使用 */
+    int low2;           /* 2维数组第二维下界，仅array2d使用 */
+    int high2;          /* 2维数组第二维上界，仅array2d使用 */
+    int dim1_size;      /* 第一维大小，仅array2d使用 */
+    char original_type[al]; /* 原始类型名，仅typedef使用 */
+    int original_kind;  /* 原始类型种类，仅typedef使用 */
 };
 
 struct tablestruct table[txmax]; /* 名字表 */
@@ -121,22 +127,24 @@ int getsym();
 int getch();
 void init();
 int gen(enum fct x, int y, int z);
-int test(bool* s1, bool* s2, int n);
-int inset(int e, bool* s);
-int addset(bool* sr, bool* s1, bool* s2, int n);
-int subset(bool* sr, bool* s1, bool* s2, int n);
-int mulset(bool* sr, bool* s1, bool* s2, int n);
-int block(int lev, int tx, bool* fsys);
+int test(int* s1, int* s2, int n);
+int inset(int e, int* s);
+int addset(int* sr, int* s1, int* s2, int n);
+int subset(int* sr, int* s1, int* s2, int n);
+int mulset(int* sr, int* s1, int* s2, int n);
+int block(int lev, int tx, int* fsys);
 void interpret();
-int factor(bool* fsys, int* ptx, int lev);
-int term(bool* fsys, int* ptx, int lev);
-int condition(bool* fsys, int* ptx, int lev);
-int expression(bool* fsys, int* ptx, int lev);
-int statement(bool* fsys, int* ptx, int lev);
+int factor(int* fsys, int* ptx, int lev);
+int term(int* fsys, int* ptx, int lev);
+int condition(int* fsys, int* ptx, int lev);
+int expression(int* fsys, int* ptx, int lev);
+int statement(int* fsys, int* ptx, int lev);
 void listcode(int cx0);
 int vardeclaration(int* ptx, int lev, int* pdx);
 int constdeclaration(int* ptx, int lev, int* pdx);
+int typedefdeclaration(int* ptx, int lev, int* pdx);
 int position(char* idt, int tx);
 void enter(enum object k, int* ptx, int lev, int* pdx);
+void enterArray2D(int* ptx, int lev, int* pdx, int start1, int end1, int start2, int end2, char* nameBuf);
 int base(int l, int* s, int b);
-int power_term(bool* fsys, int* ptx, int lev);
+int power_term(int* fsys, int* ptx, int lev);

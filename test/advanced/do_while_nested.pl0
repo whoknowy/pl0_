@@ -1,0 +1,67 @@
+// 嵌套do-while循环测试
+const max = 3;
+var i, j, product, table(1:3, 1:3);
+
+begin
+    // 使用嵌套do-while循环生成乘法表
+    write("Multiplication table:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            product := i * j;
+            table(i, j) := product;
+            write(product);
+            j := j + 1
+        end
+        while j <= max;
+        i := i + 1
+    end
+    while i <= max;
+    
+    // 使用嵌套do-while循环计算对角线元素之和
+    var diagonalSum;
+    diagonalSum := 0;
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            if i = j then
+            begin
+                diagonalSum := diagonalSum + table(i, j)
+            end;
+            j := j + 1
+        end
+        while j <= max;
+        i := i + 1
+    end
+    while i <= max;
+    
+    write("Diagonal sum:");
+    write(diagonalSum);
+    
+    // 使用do-while循环计算每行之和
+    var rowSum;
+    i := 1;
+    do
+    begin
+        rowSum := 0;
+        j := 1;
+        do
+        begin
+            rowSum := rowSum + table(i, j);
+            j := j + 1
+        end
+        while j <= max;
+        write("Row ");
+        write(i);
+        write(" sum:");
+        write(rowSum);
+        i := i + 1
+    end
+    while i <= max
+end.

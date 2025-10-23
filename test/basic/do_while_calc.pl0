@@ -1,0 +1,14 @@
+const max = 3;
+var i, sum;
+
+begin
+    i := 1;
+    sum := 0;
+    do
+    begin
+        sum := sum + i;
+        i := i + 1
+    end
+    while i <= max;
+    write(sum)
+end.

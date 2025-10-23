@@ -1,0 +1,15 @@
+// 最基础的do-while测试
+var i, sum;
+
+begin
+    i := 1;
+    sum := 0;
+    do
+    begin
+        sum := sum + i;
+        i := i + 1
+    end
+    while i <= 5;
+    
+    write(sum)
+end.

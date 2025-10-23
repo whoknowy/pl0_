@@ -1,0 +1,116 @@
+// 复杂二维数组操作测试
+const rows = 4;
+const cols = 3;
+var i, j, k, temp, matrix(1:4, 1:3), transposed(1:3, 1:4);
+
+begin
+    // 初始化原始矩阵
+    write("Original matrix:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            matrix(i, j) := i * 10 + j;
+            write(matrix(i, j));
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 矩阵转置
+    write("Transposed matrix:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            transposed(j, i) := matrix(i, j);
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 输出转置矩阵
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            write(transposed(i, j));
+            j := j + 1
+        end
+        while j <= rows;
+        i := i + 1
+    end
+    while i <= cols;
+    
+    // 计算每行的和
+    var rowSums(1:4);
+    i := 1;
+    do
+    begin
+        rowSums(i) := 0;
+        j := 1;
+        do
+        begin
+            rowSums(i) := rowSums(i) + matrix(i, j);
+            j := j + 1
+        end
+        while j <= cols;
+        write("Row ");
+        write(i);
+        write(" sum:");
+        write(rowSums(i));
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 计算每列的和
+    var colSums(1:3);
+    j := 1;
+    do
+    begin
+        colSums(j) := 0;
+        i := 1;
+        do
+        begin
+            colSums(j) := colSums(j) + matrix(i, j);
+            i := i + 1
+        end
+        while i <= rows;
+        write("Column ");
+        write(j);
+        write(" sum:");
+        write(colSums(j));
+        j := j + 1
+    end
+    while j <= cols;
+    
+    // 计算矩阵所有元素的总和
+    var totalSum;
+    totalSum := 0;
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            totalSum := totalSum + matrix(i, j);
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    write("Total sum of all elements:");
+    write(totalSum)
+end.

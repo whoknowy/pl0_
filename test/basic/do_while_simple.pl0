@@ -1,0 +1,11 @@
+var i;
+
+begin
+    i := 1;
+    do
+    begin
+        write(i);
+        i := i + 1
+    end
+    while i <= 3
+end.

@@ -1,0 +1,65 @@
+// 高级二维数组与do-while循环测试
+const size = 4;
+var i, j, sum, matrix(1:4, 1:4);
+
+begin
+    // 使用do-while循环初始化4x4矩阵
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            matrix(i, j) := i + j - 1;  // 填充模式
+            j := j + 1
+        end
+        while j <= size;
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 使用do-while循环计算每行之和
+    i := 1;
+    do
+    begin
+        sum := 0;
+        j := 1;
+        do
+        begin
+            sum := sum + matrix(i, j);
+            j := j + 1
+        end
+        while j <= size;
+        write(sum);
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 使用do-while循环计算每列之和
+    j := 1;
+    do
+    begin
+        sum := 0;
+        i := 1;
+        do
+        begin
+            sum := sum + matrix(i, j);
+            i := i + 1
+        end
+        while i <= size;
+        write(sum);
+        j := j + 1
+    end
+    while j <= size;
+    
+    // 使用do-while循环计算对角线之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        sum := sum + matrix(i, i);
+        i := i + 1
+    end
+    while i <= size;
+    write(sum)
+end.

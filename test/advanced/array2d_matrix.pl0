@@ -1,0 +1,75 @@
+// 二维数组矩阵运算测试
+const n = 3;
+var i, j, k, sum, a(1:3, 1:3), b(1:3, 1:3), c(1:3, 1:3);
+
+begin
+    // 初始化矩阵A
+    write("Initializing matrix A:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            a(i, j) := i + j;
+            write(a(i, j));
+            j := j + 1
+        end
+        while j <= n;
+        i := i + 1
+    end
+    while i <= n;
+    
+    // 初始化矩阵B
+    write("Initializing matrix B:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            b(i, j) := i * j;
+            write(b(i, j));
+            j := j + 1
+        end
+        while j <= n;
+        i := i + 1
+    end
+    while i <= n;
+    
+    // 矩阵加法 C = A + B
+    write("Matrix addition C = A + B:");
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            c(i, j) := a(i, j) + b(i, j);
+            write(c(i, j));
+            j := j + 1
+        end
+        while j <= n;
+        i := i + 1
+    end
+    while i <= n;
+    
+    // 计算矩阵C所有元素之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            sum := sum + c(i, j);
+            j := j + 1
+        end
+        while j <= n;
+        i := i + 1
+    end
+    while i <= n;
+    
+    write("Sum of matrix C:");
+    write(sum)
+end.

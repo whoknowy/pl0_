@@ -1,0 +1,53 @@
+// 二维数组与do-while循环结合测试
+const rows = 3, cols = 3;
+var i, j, sum, matrix(1:3, 1:3);
+
+begin
+    // 使用嵌套do-while循环初始化二维数组
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            matrix(i, j) := i * j;  // 乘法表
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 使用嵌套do-while循环输出二维数组
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            write(matrix(i, j));
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    // 使用嵌套do-while循环计算所有元素之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        j := 1;
+        do
+        begin
+            sum := sum + matrix(i, j);
+            j := j + 1
+        end
+        while j <= cols;
+        i := i + 1
+    end
+    while i <= rows;
+    
+    write(sum)
+end.

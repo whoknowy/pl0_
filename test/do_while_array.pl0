@@ -1,0 +1,48 @@
+// do-while循环与数组结合测试
+const size = 5;
+var i, sum, avg, max, maxIndex, numbers(1:5);
+
+begin
+    // 使用do-while循环初始化数组
+    i := 1;
+    do
+    begin
+        numbers(i) := i * i;  // 存储平方数
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 使用do-while循环计算数组元素之和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        sum := sum + numbers(i);
+        i := i + 1
+    end
+    while i <= size;
+    
+    // 计算平均值
+    avg := sum / size;
+    
+    write(sum);
+    write(avg);
+    
+    // 使用do-while循环查找最大值
+    max := numbers(1);
+    maxIndex := 1;
+    i := 2;
+    do
+    begin
+        if numbers(i) > max then
+        begin
+            max := numbers(i);
+            maxIndex := i
+        end;
+        i := i + 1
+    end
+    while i <= size;
+    
+    write(max);
+    write(maxIndex)
+end.

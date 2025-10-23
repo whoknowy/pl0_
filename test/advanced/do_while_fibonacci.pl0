@@ -1,0 +1,63 @@
+// do-while循环实现斐波那契数列
+const max = 10;
+var i, a, b, c, fib(1:10);
+
+begin
+    // 初始化斐波那契数列
+    fib(1) := 1;
+    fib(2) := 1;
+    
+    // 使用do-while循环计算斐波那契数列
+    i := 3;
+    do
+    begin
+        fib(i) := fib(i - 1) + fib(i - 2);
+        i := i + 1
+    end
+    while i <= max;
+    
+    // 输出斐波那契数列
+    write("Fibonacci sequence:");
+    i := 1;
+    do
+    begin
+        write(fib(i));
+        i := i + 1
+    end
+    while i <= max;
+    
+    // 计算斐波那契数列的和
+    var sum;
+    sum := 0;
+    i := 1;
+    do
+    begin
+        sum := sum + fib(i);
+        i := i + 1
+    end
+    while i <= max;
+    
+    write("Sum of Fibonacci sequence:");
+    write(sum);
+    
+    // 查找斐波那契数列中的最大值
+    var maxVal, maxIndex;
+    maxVal := fib(1);
+    maxIndex := 1;
+    i := 2;
+    do
+    begin
+        if fib(i) > maxVal then
+        begin
+            maxVal := fib(i);
+            maxIndex := i
+        end;
+        i := i + 1
+    end
+    while i <= max;
+    
+    write("Maximum value:");
+    write(maxVal);
+    write("Maximum value index:");
+    write(maxIndex)
+end.

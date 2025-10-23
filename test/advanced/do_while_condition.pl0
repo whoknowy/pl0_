@@ -1,0 +1,73 @@
+// do-while循环条件测试
+var i, j, count, sum, numbers(1:10);
+
+begin
+    // 初始化数组
+    i := 1;
+    do
+    begin
+        numbers(i) := i * 2;  // 偶数序列
+        i := i + 1
+    end
+    while i <= 10;
+    
+    // 使用do-while循环统计大于10的元素个数
+    count := 0;
+    i := 1;
+    do
+    begin
+        if numbers(i) > 10 then
+        begin
+            count := count + 1
+        end;
+        i := i + 1
+    end
+    while i <= 10;
+    
+    write("Count of elements > 10:");
+    write(count);
+    
+    // 使用do-while循环计算偶数的和
+    sum := 0;
+    i := 1;
+    do
+    begin
+        if numbers(i) % 2 = 0 then
+        begin
+            sum := sum + numbers(i)
+        end;
+        i := i + 1
+    end
+    while i <= 10;
+    
+    write("Sum of even numbers:");
+    write(sum);
+    
+    // 使用do-while循环查找第一个大于15的元素
+    var found, foundIndex;
+    found := 0;
+    foundIndex := 0;
+    i := 1;
+    do
+    begin
+        if numbers(i) > 15 then
+        begin
+            found := numbers(i);
+            foundIndex := i
+        end;
+        i := i + 1
+    end
+    while i <= 10 && found = 0;
+    
+    if found > 0 then
+    begin
+        write("First element > 15:");
+        write(found);
+        write("Found at index:");
+        write(foundIndex)
+    end
+    else
+    begin
+        write("No element > 15 found")
+    end
+end.
