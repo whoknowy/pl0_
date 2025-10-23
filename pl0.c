@@ -18,13 +18,17 @@
 #include "pl0.h"
 #include "string.h"
 #include <windows.h>
+
  /* 解释执行时使用的栈 */
 #define stacksize 500
+// 在getchdo定义附近添加回退宏（用于回退一个字符）
+#define ungetch() do { if (cc > 0) cc--; } while(0)
 
 int main()
 {
 	bool nxtlev[symnum];
 	SetConsoleOutputCP(65001);
+
 	printf("Input pl/0 file?   ");
 	scanf("%s", fname); /* 输入文件名 */
 
@@ -395,6 +399,13 @@ void error(int n) {
  *
  * 被函数getsym调用。
  */
+/*
+ * 漏掉空格，读取一个字符。
+ *
+ * 每次读一行，存入line缓冲区，line被getsym取空后再读一行
+ *
+ * 被函数getsym调用。
+ */
 int getch()
 {
 	if (cc == ll)
@@ -409,16 +420,40 @@ int getch()
 		printf("%d ", cx);
 		fprintf(fa1, "%d ", cx);
 		ch = ' ';
-		while (ch != 10)
+		while (ch != 10)  // 读取一行直到换行符
 		{
-            /* fscanf(fin,"%c", &ch) */
-            /* richard */
+			// 读取一个字符
 			if (EOF == fscanf(fin, "%c", &ch))
 			{
 				line[ll] = 0;
 				break;
 			}
-            /* end richard */
+
+			// 新增：检测并处理{}注释
+			if (ch == '{')  // 注释开始
+			{
+				// 跳过注释内所有字符，直到找到}或文件结束
+				while (1)
+				{
+					// 读取注释内的字符
+					if (EOF == fscanf(fin, "%c", &ch))
+					{
+						error(37);  // 注释缺少“}”（已有错误码）
+						line[ll] = 0;
+						break;
+					}
+					// 注释结束，退出注释处理
+					if (ch == '}')
+					{
+						break;
+					}
+					// 注释内的字符不输出、不存入缓冲区，直接跳过
+				}
+				// 注释处理完成后，跳过当前循环，不将{}存入缓冲区
+				continue;
+			}
+
+			// 非注释字符：输出并存入line缓冲区
 			printf("%c", ch);
 			fprintf(fa1, "%c", ch);
 			line[ll] = ch;
@@ -427,11 +462,14 @@ int getch()
 		printf("\n");
 		fprintf(fa1, "\n");
 	}
+	// 从缓冲区读取当前字符
 	ch = line[cc];
 	cc++;
 	return 0;
 }
-
+/*
+ * 词法分析，获取一个符号
+ */
 /*
  * 词法分析，获取一个符号
  */
@@ -439,10 +477,48 @@ int getsym()
 {
 	int i, j, k;
 
-	/* the original version lacks "\r", thanks to foolevery */
-	while (ch == ' ' || ch == 10 || ch == 13 || ch == 9) /* 忽略空格、换行、回车和TAB */
-	{
-		getchdo;
+	// 新增：处理空白字符和注释（替换原有的空白处理逻辑）
+	while (1) {
+		// 先跳过空白字符（空格、换行、回车、TAB）
+		while (ch == ' ' || ch == 10 || ch == 13 || ch == 9) {
+			getchdo; // 读取下一个字符
+		}
+
+		// 检查是否为注释起始（/）
+		if (ch == '/') {
+			getchdo; // 读取/后面的字符（此时ch为/后的字符）
+
+			// 处理行注释 //
+			if (ch == '/') {
+				// 跳过本行剩余字符，直到换行、回车或文件结束
+				while (ch != 10 && ch != 13 && ch != EOF) {
+					getchdo; // 持续读取直到行尾
+				}
+			}
+			// 处理块注释 /* */
+			else if (ch == '*') {
+				char prev_ch; // 记录前一个字符，用于检测*/
+				// 循环跳过块注释内容，直到找到结束符*/
+				do {
+					prev_ch = ch;
+					getchdo; // 读取下一个字符
+					// 如果文件结束仍未找到闭合符，报错
+					if (ch == EOF) {
+						error(37); 
+						break;
+					}
+				} while (!(prev_ch == '*' && ch == '/')); // 检测*/组合
+				getchdo; // 跳过结束符的/
+			}
+			// 不是注释（普通/运算符），回退一个字符
+			else {
+				ungetch(); // 关键：回退到/字符，确保后续能解析为运算符
+			}
+		}
+		// 不是注释也不是空白，退出循环开始解析符号
+		else {
+			break;
+		}
 	}
 	if (ch >= 'a' && ch <= 'z')
 	{ /* 名字或保留字以a..z开头 */
@@ -583,8 +659,6 @@ int getsym()
 										}
 										else{
 											sym = ssym[ch]; /* 当符号不满足上述条件时，全部按照单字符符号处理 */
-											/* getchdo; */
-											/* richard */
 											if (sym != period){
 												getchdo;
 											}
@@ -593,7 +667,6 @@ int getsym()
 								}
 							}
 						}
-                        /* end richard */
 					}
 				}
 			}
