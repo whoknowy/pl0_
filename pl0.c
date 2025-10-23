@@ -136,34 +136,37 @@ void init()
 	strcpy(&(word[1][0]), "call");
 	strcpy(&(word[2][0]), "const");
 	strcpy(&(word[3][0]), "do");
-	strcpy(&(word[4][0]), "end");
-	strcpy(&(word[5][0]), "for");
-	strcpy(&(word[6][0]), "if");
-	strcpy(&(word[7][0]), "odd");
-	strcpy(&(word[8][0]), "procedure");
-	strcpy(&(word[9][0]), "read");
-	strcpy(&(word[10][0]), "then");
-	strcpy(&(word[11][0]), "to");
-	strcpy(&(word[12][0]), "var");
-	strcpy(&(word[13][0]), "while");
-	strcpy(&(word[14][0]), "write");
+	strcpy(&(word[4][0]), "else");
+	strcpy(&(word[5][0]), "end");
+	strcpy(&(word[6][0]), "for");
+	strcpy(&(word[7][0]), "if");
+	strcpy(&(word[8][0]), "odd");
+	strcpy(&(word[9][0]), "procedure");
+	strcpy(&(word[10][0]), "read");
+	strcpy(&(word[11][0]), "then");
+	strcpy(&(word[12][0]), "to");
+	strcpy(&(word[13][0]), "var");
+	strcpy(&(word[14][0]), "while");
+	strcpy(&(word[15][0]), "write");
+	
 
 	/* 设置保留字符号 */
 	wsym[0] = beginsym;
 	wsym[1] = callsym;
 	wsym[2] = constsym;
 	wsym[3] = dosym;
-	wsym[4] = endsym;
-	wsym[5] = forsym;
-	wsym[6] = ifsym;
-	wsym[7] = oddsym;
-	wsym[8] = procsym;
-	wsym[9] = readsym;
-	wsym[10] = thensym;
-	wsym[11] = tosym;
-	wsym[12] = varsym;
-	wsym[13] = whilesym;
-	wsym[14] = writesym;
+	wsym[4]= elsesym;
+	wsym[5] = endsym;
+	wsym[6] = forsym;
+	wsym[7] = ifsym;
+	wsym[8] = oddsym;
+	wsym[9] = procsym;
+	wsym[10] = readsym;
+	wsym[11] = thensym;
+	wsym[12] = tosym;
+	wsym[13] = varsym;
+	wsym[14] = whilesym;
+	wsym[15] = writesym;
 
 	/* 设置指令名称 */
 	strcpy(&(mnemonic[lit][0]), "lit");
@@ -1368,7 +1371,21 @@ int statement(bool* fsys, int* ptx, int lev)
 						cx1 = cx;					 /* 保存当前指令地址 */
 						gendo(jpc, 0, 0);			 /* 生成条件跳转指令，跳转地址未知，暂时写0 */
 						statementdo(fsys, ptx, lev); /* 处理then后的语句 */
-						code[cx1].a = cx;			 /* 经statement处理后，cx为then后语句执行完的位置，它正是前面未定的跳转地址 */
+						if (sym == semicolon) {      // then后面表达式的;号
+                            getsymdo;
+                            if (sym = elsesym) { /*then后面出现了else，选择距离if最近的那个else配对，跳过then*/
+                                getsymdo;
+                                cx2 = cx;
+                                code[cx1].a = cx + 1;         /*cx为当前的指令地址，cx+1即为then语句执行后的else语句的位置，回填地址*/
+                                gendo(jmp, 0, 0);             //需要跳过then后表达式，但是目前还不知道then语句到什么位置结束，所以先填0
+                                statementdo(fsys, ptx, lev);  //执行else后表达式
+                                code[cx2].a = cx;             /*经statement处理后，cx为else后语句执行完的位置，它正是前面未定的跳转地址，回填地址*/
+                            } else {
+                                code[cx1].a = cx; /*经statement处理后，cx为then后语句执行完的位置，它正是前面未定的跳转地址，回填地址*/
+                            }
+                        } else {
+                            error(5);
+                        }		 /* 经statement处理后，cx为then后语句执行完的位置，它正是前面未定的跳转地址 */
 					}
 					else
 					{

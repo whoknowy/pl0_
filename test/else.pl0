@@ -1,0 +1,10 @@
+const a = 5, b = 10;
+var max;
+
+begin
+    if a > b then
+        max := a;
+    else
+        max := b;
+    write(max)
+end.
